@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SlidingMenu">
+        <attr name="menu_width_rate" format="float"/>
+        <attr name="sliding_mode" format="enum">
+            <enum name="normal" value="0" />
+            <enum name="drawer" value="1" />
+            <enum name="qq" value="2" />
+        </attr>
+        <attr name="content_alpha" format="float" />
+        <attr name="scale_rate" format="float" />
+        <attr name="animator_time" format="integer" />
+    </declare-styleable>
+</resources>
