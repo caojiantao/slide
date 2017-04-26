@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="SlidingMenu">
+        <!-- 菜单所占屏幕宽度的比例 -->
         <attr name="menu_width_rate" format="float"/>
+        <!-- 侧滑菜单的滚动模式 -->
         <attr name="sliding_mode" format="enum">
             <enum name="normal" value="0" />
             <enum name="drawer" value="1" />
             <enum name="qq" value="2" />
         </attr>
+        <!-- 主界面的最低透明度 -->
         <attr name="content_alpha" format="float" />
+        <!-- 仿QQ侧滑时视图缩小的最低比例 -->
         <attr name="scale_rate" format="float" />
+        <!-- 手指抬起视图滚动动画的持续时间 -->
         <attr name="animator_time" format="integer" />
     </declare-styleable>
 </resources>

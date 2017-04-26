@@ -11,55 +11,24 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 
-public class SlidingMenu extends ViewGroup {
+public class SlidingMenu extends ViewGroup implements Constants {
 
-    /* 侧滑模式 */
-    public final static int NORMAL = 0;
-    public final static int DRAWER = 1;
-    public final static int QQ = 2;
+    // 自定义属性，初始化为默认值
+    private float minAlpha = MIN_ALPHA;
+    private float menuWidthRate = MENU_WIDTH_RATE;
+    private float scaleRate = SCALE_RATE;
+    private int slidingMode = NORMAL;
+    private int animatorTime = ANIMATOR_TIME;
 
-    /**
-     * 最低触发菜单动画效果水平速率
-     */
-    public final static int MIN_VELOCITY = 500;
-
-    /**
-     * 内容透明度的最低程度，默认值是0.7
-     */
-    private float minAlpha = 0.7f;
-
-    /**
-     * 菜单布局占父布局的百分比，默认值是0.8
-     */
-    private float menuWidthRate = 0.8f;
-
-    /**
-     * 仿QQ菜单缩放视图比例，默认值是0.7
-     */
-    private float scaleRate = 0.7f;
-
-    /**
-     * 侧滑模式，上述三种可选
-     */
-    private int slidingMode;
-
-    /**
-     * 显示隐藏菜单动画默认时间
-     */
-    private int aniTime = 250;
-
-    /**
-     * 平滑滚动帮助类
-     */
+    // 视图滚动和速率计算辅助类
     private Scroller scroller;
-
     private VelocityTracker mVelocityTracker;
 
     private boolean once = false;
 
+    // 子布局，和内容遮罩
     private ViewGroup leftMenu, rightContent;
-
-    private LinearLayout mask;
+    private Mask mask;
 
     public SlidingMenu(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
@@ -72,15 +41,15 @@ public class SlidingMenu extends ViewGroup {
         for (int i = 0; i < a.getIndexCount(); i++) {
             int attr = a.getIndex(i);
             if (attr == R.styleable.SlidingMenu_menu_width_rate){
-                menuWidthRate = a.getFloat(attr, menuWidthRate);
+                menuWidthRate = a.getFloat(attr, MENU_WIDTH_RATE);
             } else if (attr == R.styleable.SlidingMenu_sliding_mode){
                 slidingMode = a.getInteger(attr, NORMAL);
             } else if (attr == R.styleable.SlidingMenu_content_alpha){
-                minAlpha = a.getFloat(attr, minAlpha);
+                minAlpha = a.getFloat(attr, MIN_ALPHA);
             } else if (attr == R.styleable.SlidingMenu_scale_rate){
-                scaleRate = a.getFloat(attr, scaleRate);
+                scaleRate = a.getFloat(attr, SCALE_RATE);
             } else if (attr == R.styleable.SlidingMenu_animator_time){
-                aniTime = a.getInt(attr, aniTime);
+                animatorTime = a.getInt(attr, ANIMATOR_TIME);
             }
         }
         a.recycle();
@@ -176,7 +145,7 @@ public class SlidingMenu extends ViewGroup {
     //调用此方法设置滚动的相对偏移
     public void smoothScrollBy(int offsetX, int offsetY) {
         //设置scroller的滚动偏移量
-        scroller.startScroll(getScrollX(), getScrollY(), offsetX, offsetY, aniTime);
+        scroller.startScroll(getScrollX(), getScrollY(), offsetX, offsetY, animatorTime);
         postInvalidate();
     }
 
@@ -191,9 +160,13 @@ public class SlidingMenu extends ViewGroup {
         } else {
             // 视图滚动完成触发，当菜单完全隐藏才隐藏遮罩
             if (getScrollX() == 0){
-                mask.setVisibility(GONE);
+                if (mask.getVisibility() == VISIBLE){
+                    mask.setVisibility(GONE);
+                }
             } else {
-                mask.setVisibility(VISIBLE);
+                if (mask.getVisibility() == GONE){
+                    mask.setVisibility(VISIBLE);
+                }
             }
         }
         super.computeScroll();
